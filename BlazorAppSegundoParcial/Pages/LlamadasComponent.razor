@@ -1,0 +1,167 @@
+﻿@page "/Llamadas"
+@page "/Llamadas/{CurrentId:int}"
+
+<h3>Llamadas</h3>
+
+<div class="container">
+    <h3>@Mensaje</h3>
+    <div class="row">
+         <div class="col-md-9">
+             <EditForm Model="llamadas" OnValidSubmit="Guardar">
+                 <DataAnnotationsValidator></DataAnnotationsValidator>
+
+                 <div class="form-group">
+                     <label for="LlamadasId">LlamadaId</label>
+                     <InputNumber @bind-Value="llamadas.LlamadasId" class="form-control"></InputNumber>
+                     <ValidationMessage For="(()=>llamadas.LlamadasId)"></ValidationMessage>
+                 </div>
+
+                 <div class="form-group">
+                     <label for="Descripcion">Descripcion</label>
+                     <InputText @bind-Value="llamadas.Descripcion" class="form-control"></InputText>
+                     <ValidationMessage For="(()=>llamadas.Descripcion)"></ValidationMessage>
+                 </div>
+
+                 <div class="form-row form-group">
+                     <div class="col">
+                         <label for="Problema">Problema</label>
+                         <InputText @bind-Value="Problema" class="form-control"></InputText>
+                     </div>
+                    
+                     <div class="col">
+                         <label for="Solucion">Solucion</label>
+                         <InputText @bind-Value="Solucion" class="form-control"></InputText>
+                     </div>
+                     
+                    <button type="button" class="btn btn-outline-info" @onclick="AgregarLlamada">Agregar</button>
+                     
+  
+                 </div>
+                
+
+                 <br />
+
+                 <table class="table">
+                     <thead>
+                         <tr>
+                             <th>Id</th>
+                             <th>Problema</th>
+                             <th>Solucion</th>
+                             <th>LlamadaId</th>
+                         </tr>
+                     </thead>
+                     <tbody>
+                         @foreach (var item in llamadas.LlamadasDetalles)
+                         {
+                             <tr>
+                                 <td>@item.LlamadaDetalleId</td>
+                                 <td>@item.Problema</td>
+                                 <td>@item.solucion</td>
+                                 <td>@item.LlamadaId</td>
+                             </tr>
+                         }
+                     </tbody>
+                 </table>
+
+                 <br />
+
+                 <button type="button" class="btn btn-info" @onclick="Nuevo">Nuevo</button>
+                 <button type="submit" class="btn btn-primary" >Guardar</button>
+                 <button type="button" class="btn btn-danger" @onclick="Eliminar">Eliminar</button>
+
+             </EditForm>
+
+         </div>
+        <div class="col">
+            <button type="button" class="btn btn-success" @onclick="Buscar">Buscar</button>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+@code {
+    Llamadas llamadas = new Llamadas();
+    private string Mensaje;
+
+    LlamadasControllers LlamadasControllers = new LlamadasControllers();
+    private String Problema;
+    private String Solucion;
+    private int DetalleId;
+
+
+    [Parameter]
+    public int CurrentId { get; set; }
+
+    protected override void OnInitialized()
+    {
+        if(CurrentId>0)
+        {
+            llamadas = LlamadasControllers.Buscar(CurrentId);
+        }
+    }
+
+    private void Guardar()
+    {
+        if(LlamadasControllers.Guardar(llamadas))
+        {
+            Mensaje = "Guardado correctamente";
+            this.llamadas = new Llamadas();
+            Problema = string.Empty;
+            Solucion = string.Empty;
+            DetalleId = 0;
+        } else
+        {
+            Mensaje = "No se pudo guardar";
+        }
+    }
+
+    private void Eliminar()
+    {
+        if(LlamadasControllers.Eliminar(llamadas.LlamadasId))
+        {
+            Mensaje = "Guardado correctamente";
+            this.llamadas = new Llamadas();
+        } else
+        {
+            Mensaje = "No se pudo eliminar";
+        }
+    }
+
+    private void Nuevo()
+    {
+        this.llamadas = new Llamadas();
+        Mensaje = string.Empty;
+    }
+
+    private void Buscar()
+    {
+        Llamadas busca = LlamadasControllers.Buscar(llamadas.LlamadasId);
+        if(busca!=null)
+        {
+            this.llamadas = busca;
+            Mensaje = "Llamada encontrada";
+        } else
+        {
+            Mensaje = "Llamada no encontrada";
+        }
+    }
+
+    private void AgregarLlamada()
+    {
+        llamadas.LlamadasDetalles.Add(new LlamadasDetalle
+        {
+            Problema = Problema,
+            solucion = Solucion,
+            LlamadaId = llamadas.LlamadasId
+        });
+    }
+
+
+
+}

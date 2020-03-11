@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using BlazorAppSegundoParcial.Models;
 
 namespace BlazorAppSegundoParcial.Data
 {
@@ -12,5 +13,7 @@ namespace BlazorAppSegundoParcial.Data
         {
             base.OnConfiguring(optionsBuilder.UseSqlite(@"Data Source = Database/BaseDeDatosSegundoParcial"));
         }
+
+        public DbSet<Llamadas> Llamadas { get; set; }
     }
 }

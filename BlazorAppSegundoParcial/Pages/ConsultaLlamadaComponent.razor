@@ -1,0 +1,38 @@
+﻿@page "/Consulta"
+
+
+<h3>Consulta</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Descripcion</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in ListaLlamadas)
+        {
+            <tr>
+                <td>@item.LlamadasId</td>
+                <td>@item.Descripcion</td>
+                <td><a class="btn btn-primary" href="/Llamadas/@item.LlamadasId">Ver</a></td>
+            </tr>
+        }
+    </tbody>
+
+
+</table>
+
+
+
+@code {
+    List<Llamadas> ListaLlamadas;
+    LlamadasControllers LlamadasControllers = new LlamadasControllers();
+
+    protected override void OnInitialized()
+    {
+        ListaLlamadas = LlamadasControllers.GetList(P => true);
+    }
+}
