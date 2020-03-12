@@ -27,17 +27,14 @@
                          <label for="Problema">Problema</label>
                          <InputText @bind-Value="Problema" class="form-control"></InputText>
                      </div>
-                    
+
                      <div class="col">
                          <label for="Solucion">Solucion</label>
                          <InputText @bind-Value="Solucion" class="form-control"></InputText>
                      </div>
-                     
-                    <button type="button" class="btn btn-outline-info" @onclick="AgregarLlamada">Agregar</button>
-                     
-  
-                 </div>    
 
+                 </div>
+                 <button type="button" class="btn btn-outline-info" @onclick="AgregarLlamada">Agregar</button>
                  <br />
 
                  <table class="table">
@@ -65,7 +62,7 @@
                  <br />
 
                  <button type="button" class="btn btn-info" @onclick="Nuevo">Nuevo</button>
-                 <button type="submit" class="btn btn-primary" >Guardar</button>
+                 <button type="submit" class="btn btn-primary">Guardar</button>
                  <button type="button" class="btn btn-danger" @onclick="Eliminar">Eliminar</button>
 
              </EditForm>
@@ -84,7 +81,8 @@
 
 
 
-@code {
+@code 
+{
     Llamadas llamadas = new Llamadas();
     private string Mensaje;
 
@@ -107,6 +105,14 @@
 
     private void Guardar()
     {
+        
+        if(string.IsNullOrEmpty(Problema)  | string.IsNullOrEmpty(Solucion))
+        {
+            Mensaje = "Tienes que agregar un problema o solucion";
+            return;
+        } 
+      
+
         if(LlamadasControllers.Guardar(llamadas))
         {
             Mensaje = "Guardado correctamente";
@@ -124,13 +130,14 @@
     {
         if(LlamadasControllers.Eliminar(llamadas.LlamadasId))
         {
-            Mensaje = "Guardado correctamente";
+            Mensaje = "Eliminado correctamente";
             this.llamadas = new Llamadas();
         } else
         {
             Mensaje = "No se pudo eliminar";
         }
     }
+
 
     private void Nuevo()
     {
@@ -153,12 +160,22 @@
 
     private void AgregarLlamada()
     {
-        llamadas.LlamadasDetalles.Add(new LlamadasDetalle
+
+        if(string.IsNullOrEmpty(Problema)  | string.IsNullOrEmpty(Solucion))
         {
-            Problema = Problema,
-            solucion = Solucion,
-            LlamadaId = llamadas.LlamadasId
-        });
+            Mensaje = "Tienes que agregar un problema o solucion";
+            return;
+        } else
+        {
+            llamadas.LlamadasDetalles.Add(new LlamadasDetalle
+            {
+                Problema = Problema,
+                solucion = Solucion,
+                LlamadaId = llamadas.LlamadasId
+            });
+        }
+
+
     }
 
 

@@ -15,6 +15,8 @@ namespace BlazorAppSegundoParcial.Models
         public int LlamadasId { get; set; }
 
         [Required(ErrorMessage ="La descripcion no puede estar vacia")]
+        [MinLength(3,ErrorMessage ="Descripcion muy corta")]
+        [MaxLength(60,ErrorMessage ="Descripcion muy larga")]
         public string Descripcion { get; set; }
 
         [ForeignKey("LlamadaId")]
